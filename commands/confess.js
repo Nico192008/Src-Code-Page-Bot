@@ -36,7 +36,7 @@ module.exports = {
         "audience": {
           "privacy": {
             "allow": [],
-            "base_state": "FRIENDS", // SELF EVERYONE
+            "base_state": "EVERYONE", // SELF EVERYONE
             "deny": [],
             "tag_expansion_state": "UNSPECIFIED"
           }
