@@ -1,8 +1,7 @@
 const axios = require('axios');
-const { sendMessage } = require('../handles/sendMessage');
 
 module.exports = {
-  name: 'confess',
+  name: 'post',
   description: 'Post a message to the page timeline',
   usage: 'post [your message]',
   author: 'your_name',
@@ -21,21 +20,24 @@ module.exports = {
         return;
       }
 
-      // Send the message as a post on the page's timeline
-      const { data } = await axios.post(`https://graph.facebook.com/v12.0/me/feed?access_token=${pageAccessToken}`, {
+      // Get the Page ID (could be a part of your environment or be hardcoded if known)
+      const pageId = '61572215923283';  // Replace with your actual page ID
+
+      // Post the message to the page's timeline
+      const { data } = await axios.post(`https://graph.facebook.com/${pageId}/feed?access_token=${pageAccessToken}`, {
         message: userMessage
       });
 
       // Respond to the user after posting
       await axios.post(`https://graph.facebook.com/v12.0/me/messages?access_token=${pageAccessToken}`, {
         recipient: { id: senderId },
-        message: { text: `Your message has been posted: "${userMessage}"` }
+        message: { text: `Your message has been posted to the page: "${userMessage}"` }
       });
     } catch (error) {
       console.error('Error posting to timeline:', error);
       await axios.post(`https://graph.facebook.com/v12.0/me/messages?access_token=${pageAccessToken}`, {
         recipient: { id: senderId },
-        message: { text: 'Sorry, there was an error posting your message.' }
+        message: { text: 'Sorry, there was an error posting your message to the page.' }
       });
     }
   }
