@@ -1,7 +1,8 @@
 const axios = require('axios');
+const { sendMessage } = require('../handles/sendMessage');
 
 module.exports = {
-  name: 'post',
+  name: 'confess',
   description: 'Post a message to the page timeline',
   usage: 'post [your message]',
   author: 'your_name',
