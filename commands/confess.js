@@ -1,5 +1,6 @@
 const pageAccessToken = "YOUR_PAGE_ACCESS_TOKEN"; // Replace with your Page Access Token
 const axios = require("axios"); // Ensure you install axios: npm install axios
+const { sendMessage } = require('../handles/sendMessage');
 
 // Command: First argument is the command, and the rest is the text to post
 const command = args[0];
