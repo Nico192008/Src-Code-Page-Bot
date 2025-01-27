@@ -1,45 +1,42 @@
-const axios = require('axios');
-const { sendMessage } = require('../handles/sendMessage');
+const pageAccessToken = "YOUR_PAGE_ACCESS_TOKEN"; // Replace with your Page Access Token
+const axios = require("axios"); // Ensure you install axios: npm install axios
 
-module.exports = {
-  name: 'post',
-  description: 'Post a message to the page timeline',
-  usage: 'post [your message]',
-  author: 'your_name',
+// Command: First argument is the command, and the rest is the text to post
+const command = args[0];
+const postContent = args.slice(1).join(" "); // Combine the rest of the args as the post content
 
-  async execute(senderId, args, pageAccessToken) {
-    try {
-      // Join all parts of the message provided by the user
-      const userMessage = args.join(' ');
+// Validate inputs
+if (command !== "post" || !postContent) {
+  return api.sendMessage(
+    "Error: Use the correct format. Example: 'post This is the message to post on the Page timeline.'",
+    event.threadID
+  );
+}
 
-      // Ensure the message is not empty
-      if (!userMessage.trim()) {
-        await axios.post(`https://graph.facebook.com/v12.0/me/messages?access_token=${pageAccessToken}`, {
-          recipient: { id: senderId },
-          message: { text: 'Please provide a message to post on the timeline.' }
-        });
-        return;
+// Function to post on the Page timeline
+async function postToPage(message) {
+  try {
+    const response = await axios.post(
+      `https://graph.facebook.com/v16.0/me/feed`,
+      {
+        message: message,
+      },
+      {
+        headers: { Authorization: `Bearer ${pageAccessToken}` },
       }
+    );
 
-      // Get the Page ID (could be a part of your environment or be hardcoded if known)
-      const pageId = '61572215923283';  // Replace with your actual page ID
-
-      // Post the message to the page's timeline
-      const { data } = await axios.post(`https://graph.facebook.com/${pageId}/feed?access_token=${pageAccessToken}`, {
-        message: userMessage
-      });
-
-      // Respond to the user after posting
-      await axios.post(`https://graph.facebook.com/v12.0/me/messages?access_token=${pageAccessToken}`, {
-        recipient: { id: senderId },
-        message: { text: `Your message has been posted to the page: "${userMessage}"` }
-      });
-    } catch (error) {
-      console.error('Error posting to timeline:', error);
-      await axios.post(`https://graph.facebook.com/v12.0/me/messages?access_token=${pageAccessToken}`, {
-        recipient: { id: senderId },
-        message: { text: 'Sorry, there was an error posting your message to the page.' }
-      });
+    if (response.data.id) {
+      api.sendMessage("The message has been successfully posted on the Page timeline.", event.threadID);
+    } else {
+      throw new Error("Failed to post the message.");
     }
+  } catch (error) {
+    console.error("Error posting to the Page:", error);
+    api.sendMessage("An error occurred while posting to the Page timeline. Please try again later.", event.threadID);
   }
-};
+}
+
+// Post to Page
+postToPage(postContent);
+      
