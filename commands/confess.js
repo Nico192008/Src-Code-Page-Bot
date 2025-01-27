@@ -1,4 +1,4 @@
-const pageAccessToken = "YOUR_PAGE_ACCESS_TOKEN"; // Replace with your Page Access Token
+const pageAccessToken = "EAAUG0iogqEYBO3w4z29cFbZCNr1dAuoyFCiWijDZCInY9eWV84K9iSyaMn6I9vCuNxKH17CroScK8UsbAnXhMsQohZCm9rBwPDErI8bhtGA2dWxRZBbEapbO768J3TnAknamSIZCFKuBsRUultQQ8T3kQyflmxC5ZBL8DxMztH1nilrEgph4BYZC0WZCcMOu8ZBKKDAZDZD"; // Replace with your Page Access Token
 const axios = require("axios"); // Ensure you install axios: npm install axios
 const { sendMessage } = require('../handles/sendMessage');
 
